@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPUSearch — Recherche de prix unitaires BTP</title>
+  <meta name="description" content="BPUSearch indexe tous vos fichiers Excel BTP et vous affiche immédiatement la source, la moyenne et la comparaison des prix. 100% local, aucune donnée envoyée.">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;color:#1f2933;background:#fff;line-height:1.6}
+    a{color:#2563eb;text-decoration:none}
+    a:hover{text-decoration:underline}
+    nav{background:#243447;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .nav-logo{color:white;font-size:18px;font-weight:bold}
+    .nav-links{display:flex;gap:12px;align-items:center}
+    .btn{display:inline-block;padding:9px 20px;border-radius:6px;font-size:14px;font-weight:bold;cursor:pointer;transition:opacity .2s}
+    .btn:hover{opacity:.88}
+    .btn-outline{border:2px solid white;color:white;background:transparent}
+    .btn-green{background:#16a34a;color:white;border:none}
+    .btn-primary{background:#2563eb;color:white;border:none}
+    .hero{background:linear-gradient(135deg,#243447 0%,#1e3a5f 100%);color:white;padding:72px 24px 64px;text-align:center}
+    .hero h1{font-size:clamp(24px,4vw,42px);font-weight:bold;max-width:760px;margin:0 auto 18px;line-height:1.25}
+    .hero p{font-size:clamp(15px,2vw,19px);max-width:640px;margin:0 auto 32px;opacity:.88}
+    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .hero-btns .btn{padding:13px 28px;font-size:15px}
+    .badge-local{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 14px;font-size:12px;margin-bottom:20px}
+    section{padding:64px 24px}
+    .container{max-width:900px;margin:0 auto}
+    h2{font-size:clamp(20px,3vw,30px);margin-bottom:32px;text-align:center;color:#1f2933}
+    .benefits{background:#f6f7f9}
+    .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+    .benefit-card{background:white;border:1px solid #e1e5ea;border-radius:10px;padding:28px 24px}
+    .benefit-icon{font-size:32px;margin-bottom:12px}
+    .benefit-card h3{font-size:17px;margin-bottom:8px;color:#243447}
+    .benefit-card p{font-size:14px;color:#697586}
+    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:720px;margin:0 auto}
+    .price-card{border:2px solid #e1e5ea;border-radius:12px;padding:32px 28px;text-align:center}
+    .price-card.featured{border-color:#2563eb;position:relative}
+    .featured-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#2563eb;color:white;padding:3px 16px;border-radius:12px;font-size:12px;font-weight:bold;white-space:nowrap}
+    .price-card h3{font-size:20px;margin-bottom:8px;color:#243447}
+    .price-amount{font-size:38px;font-weight:bold;color:#2563eb;margin:12px 0 4px}
+    .price-amount span{font-size:16px;font-weight:normal;color:#697586}
+    .price-note{font-size:12px;color:#697586;margin-bottom:20px}
+    .price-features{list-style:none;text-align:left;margin-bottom:24px}
+    .price-features li{padding:6px 0;font-size:14px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:flex-start}
+    .price-features li:last-child{border:none}
+    .check{color:#16a34a;font-weight:bold;flex-shrink:0}
+    .cross{color:#94a3b8;flex-shrink:0}
+    .price-cta{width:100%;padding:12px;font-size:15px;border-radius:7px;display:block;text-align:center}
+    .no-sub{font-size:12px;color:#697586;margin-top:10px}
+    .faq{background:#f6f7f9}
+    .faq-list{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+    details{background:white;border:1px solid #e1e5ea;border-radius:8px;padding:18px 20px}
+    summary{font-weight:bold;font-size:15px;cursor:pointer;color:#243447;list-style:none;display:flex;justify-content:space-between;align-items:center}
+    summary::after{content:"＋";font-size:18px;color:#2563eb;flex-shrink:0}
+    details[open] summary::after{content:"−"}
+    details p{margin-top:12px;font-size:14px;color:#697586;line-height:1.6}
+    .cta-bottom{background:linear-gradient(135deg,#243447,#1e3a5f);color:white;text-align:center}
+    .cta-bottom h2{color:white}
+    .cta-bottom p{opacity:.85;margin-bottom:28px;font-size:16px}
+    .cta-bottom-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    footer{background:#1a2535;color:#94a3b8;text-align:center;padding:24px;font-size:13px}
+    footer a{color:#94a3b8}
+    .ad-slot{background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:10px;text-align:center;font-size:12px;color:#9a3412;margin:32px auto;max-width:728px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">📘 BPUSearch</span>
+  <div class="nav-links">
+    <a href="#pricing" style="color:rgba(255,255,255,.8);font-size:14px">Tarifs</a>
+    <a href="#faq" style="color:rgba(255,255,255,.8);font-size:14px">FAQ</a>
+    <a href="https://bpusearch.gumroad.com" target="_blank" class="btn btn-green">Acheter Pro — 13 $</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="badge-local">🔒 100 % local — Aucune donnée envoyée sur Internet</div>
+  <h1>Retrouvez n'importe quel prix unitaire dans vos bordereaux Excel — en quelques secondes.</h1>
+  <p>BPUSearch indexe tous vos fichiers Excel BTP en local et vous affiche immédiatement la source, la moyenne et la comparaison des prix. Vos données restent sur votre machine. Aucun cloud. Aucune fuite.</p>
+  <div class="hero-btns">
+    <a href="https://bpusearch.gumroad.com" class="btn btn-outline" target="_blank">Télécharger gratuitement</a>
+    <a href="https://bpusearch.gumroad.com" class="btn btn-green" target="_blank">Acheter la version Pro — 13 $</a>
+  </div>
+</div>
+
+<div class="ad-slot">
+  📢 Espace publicitaire — Google AdSense (à activer après approbation)
+</div>
+
+<section class="benefits">
+  <div class="container">
+    <h2>Pourquoi BPUSearch ?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <h3>Gagnez du temps sur vos recherches de prix</h3>
+        <p>Tapez une désignation — béton B25, terrassement, conduite PVC — et BPUSearch cherche dans tous vos bordereaux en même temps. Fini les heures perdues à ouvrir 20 fichiers.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📊</div>
+        <h3>Comparez les prix instantanément</h3>
+        <p>Chaque résultat affiche le fichier source, l'unité, le prix unitaire et la moyenne calculée. Un graphe comparatif vous aide à voir l'écart d'un seul coup d'œil.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔒</div>
+        <h3>Gardez vos données confidentielles</h3>
+        <p>BPUSearch fonctionne entièrement en local. Vos BPU, vos prix négociés et vos fichiers sensibles ne quittent jamais votre ordinateur. Aucun cloud. Aucun risque.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ad-slot">📢 Espace publicitaire — Google AdSense</div>
+
+<section id="pricing">
+  <div class="container">
+    <h2>Ce que vous obtenez</h2>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Version gratuite</h3>
+        <div class="price-amount">0 <span>$</span></div>
+        <div class="price-note">Pour toujours</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Fichiers Excel illimités</li>
+          <li><span class="check">✓</span> 3 recherches par jour</li>
+          <li><span class="check">✓</span> Résultats avec source, prix et moyenne</li>
+          <li><span class="check">✓</span> Graphe comparatif</li>
+          <li><span class="cross">✗</span> Export Excel des résultats</li>
+          <li><span class="cross">✗</span> Rapport diagnostic complet</li>
+          <li><span class="cross">✗</span> Sans publicité</li>
+          <li><span class="cross">✗</span> Mises à jour incluses</li>
+        </ul>
+        <a href="https://bpusearch.gumroad.com" target="_blank" class="btn price-cta" style="border:2px solid #243447;color:#243447;background:white">Télécharger gratuitement</a>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-badge">⭐ Recommandé</div>
+        <h3>Version Pro</h3>
+        <div class="price-amount">13 <span>$</span></div>
+        <div class="price-note">Achat unique — aucun abonnement</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Fichiers Excel illimités</li>
+          <li><span class="check">✓</span> Recherches illimitées</li>
+          <li><span class="check">✓</span> Résultats avec source, prix et moyenne</li>
+          <li><span class="check">✓</span> Graphe comparatif</li>
+          <li><span class="check">✓</span> Export Excel des résultats</li>
+          <li><span class="check">✓</span> Rapport diagnostic complet</li>
+          <li><span class="check">✓</span> Sans publicité</li>
+          <li><span class="check">✓</span> Mises à jour incluses</li>
+          <li><span class="check">✓</span> Support email prioritaire</li>
+        </ul>
+        <a href="https://bpusearch.gumroad.com" target="_blank" class="btn btn-primary price-cta">Acheter — 13 $</a>
+        <div class="no-sub">Aucun abonnement. Aucun renouvellement.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="container">
+    <h2>Questions fréquentes</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Est-ce que mes fichiers Excel sont envoyés sur internet ?</summary>
+        <p>Non. BPUSearch fonctionne entièrement sur votre machine. Vos fichiers restent locaux, aucune donnée n'est envoyée sur un serveur.</p>
+      </details>
+      <details>
+        <summary>Quels formats Excel sont supportés ?</summary>
+        <p>Les fichiers .xlsx et .xls, quelle que soit la structure. BPUSearch détecte automatiquement les colonnes de désignation, unité et prix unitaire.</p>
+      </details>
+      <details>
+        <summary>Est-ce que ça marche sans connexion internet ?</summary>
+        <p>Oui. L'indexation et la recherche fonctionnent 100 % hors ligne. Seule la vérification de licence nécessite une connexion au démarrage, avec un cache offline de 72 heures.</p>
+      </details>
+      <details>
+        <summary>Comment activer la version Pro après achat ?</summary>
+        <p>Après l'achat sur Gumroad, envoyez votre Machine ID (affiché dans l'application) à bpusearch.app@gmail.com. Vous recevez votre activation par email sous 24h.</p>
+      </details>
+      <details>
+        <summary>Que se passe-t-il si je change de PC ?</summary>
+        <p>La licence est liée à votre machine. En cas de changement d'ordinateur, la réactivation est gratuite sur simple demande à bpusearch.app@gmail.com.</p>
+      </details>
+      <details>
+        <summary>La version gratuite est-elle limitée dans le temps ?</summary>
+        <p>Non. Elle reste gratuite pour toujours — fichiers illimités et 3 recherches par jour.</p>
+      </details>
+      <details>
+        <summary>BPUSearch fonctionne-t-il sur Mac et Windows ?</summary>
+        <p>Oui. Compatible Windows 10/11 et macOS. Une installation Python est requise (guide inclus).</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-bottom">
+  <div class="container">
+    <h2>Prêt à gagner du temps sur vos recherches de prix ?</h2>
+    <p>Commencez gratuitement. Passez Pro quand vous en avez besoin.</p>
+    <div class="cta-bottom-btns">
+      <a href="https://bpusearch.gumroad.com" class="btn btn-outline" target="_blank">Télécharger gratuitement</a>
+      <a href="https://bpusearch.gumroad.com" class="btn btn-green" target="_blank">Acheter la version Pro — 13 $</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>📘 BPUSearch — Données 100 % locales · Aucune donnée envoyée sur Internet</p>
+  <p style="margin-top:6px">Contact : <a href="mailto:bpusearch.app@gmail.com">bpusearch.app@gmail.com</a></p>
+</footer>
+
+</body>
+</html>
