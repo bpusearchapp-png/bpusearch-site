@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Redirection BPUSearch...</title>
+    <style>
+        body { margin:0; font-family: -apple-system, sans-serif; background: #f6f7f9; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .box { background: white; border: 1px solid #e1e5ea; border-radius: 12px; padding: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { margin: 0 0 10px; color: #1f2933; }
+        p { color: #697586; margin: 0; }
+        .adsense-placeholder { margin-top: 30px; text-align: center; background: #eee; border: 1px dashed #ccc; padding: 15px; color: #999; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="spinner"></div>
+        <h2>Connexion en cours...</h2>
+        <p>Veuillez patienter pendant que nous vous redirigeons vers l'application.</p>
+        
+        <!-- AdSense Placeholder -->
+        <div class="adsense-placeholder">
+            [Publicité Google AdSense]
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (token) {
+            // Redirection vers le Worker qui fera le relais vers localhost
+            window.location.href = `https://bpusearch-worker.bpusearch-worker.workers.dev/auth/callback?token=${token}`;
+        } else {
+            document.body.innerHTML = `
+                <div class="box">
+                    <h2 style="color:#dc2626">Erreur</h2>
+                    <p>Lien invalide ou manquant. Veuillez relancer l'application.</p>
+                </div>`;
+        }
+    </script>
+</body>
+</html>
