@@ -3,211 +3,322 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BPUSearch — Recherche de prix unitaires BTP</title>
-  <meta name="description" content="BPUSearch indexe tous vos fichiers Excel BTP et vous affiche immédiatement la source, la moyenne et la comparaison des prix. 100% local, aucune donnée envoyée.">
+  <title>BPUSearch — Recherche, tri et comparaison de prix unitaires BTP</title>
+  <meta name="description" content="BPUSearch centralise la recherche de prix unitaires dans vos fichiers Excel BTP : filtre, tri, moyenne dynamique, graphe comparatif, export Pro et confidentialité locale.">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#18324f">
   <style>
+    :root{--bg:#f4f7fb;--card:#fff;--text:#0f172a;--muted:#607084;--border:#dce5ef;--brand:#1f4fff;--brand2:#14b8ff;--ok:#16a34a;--shadow:0 18px 50px rgba(16,24,40,.10);--shadow-soft:0 10px 30px rgba(16,24,40,.08);--radius:22px;--radius-sm:14px;--max:1180px}
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,sans-serif;color:#1f2933;background:#fff;line-height:1.6}
-    a{color:#2563eb;text-decoration:none}
-    a:hover{text-decoration:underline}
-    nav{background:#243447;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-    .nav-logo{color:white;font-size:18px;font-weight:bold}
-    .nav-links{display:flex;gap:12px;align-items:center}
-    .btn{display:inline-block;padding:9px 20px;border-radius:6px;font-size:14px;font-weight:bold;cursor:pointer;transition:opacity .2s}
-    .btn:hover{opacity:.88}
-    .btn-outline{border:2px solid white;color:white;background:transparent}
-    .btn-green{background:#16a34a;color:white;border:none}
-    .btn-primary{background:#2563eb;color:white;border:none}
-    .hero{background:linear-gradient(135deg,#243447 0%,#1e3a5f 100%);color:white;padding:72px 24px 64px;text-align:center}
-    .hero h1{font-size:clamp(24px,4vw,42px);font-weight:bold;max-width:760px;margin:0 auto 18px;line-height:1.25}
-    .hero p{font-size:clamp(15px,2vw,19px);max-width:640px;margin:0 auto 32px;opacity:.88}
-    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-    .hero-btns .btn{padding:13px 28px;font-size:15px}
-    .badge-local{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 14px;font-size:12px;margin-bottom:20px}
-    section{padding:64px 24px}
-    .container{max-width:900px;margin:0 auto}
-    h2{font-size:clamp(20px,3vw,30px);margin-bottom:32px;text-align:center;color:#1f2933}
-    .benefits{background:#f6f7f9}
-    .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
-    .benefit-card{background:white;border:1px solid #e1e5ea;border-radius:10px;padding:28px 24px}
-    .benefit-icon{font-size:32px;margin-bottom:12px}
-    .benefit-card h3{font-size:17px;margin-bottom:8px;color:#243447}
-    .benefit-card p{font-size:14px;color:#697586}
-    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:720px;margin:0 auto}
-    .price-card{border:2px solid #e1e5ea;border-radius:12px;padding:32px 28px;text-align:center}
-    .price-card.featured{border-color:#2563eb;position:relative}
-    .featured-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#2563eb;color:white;padding:3px 16px;border-radius:12px;font-size:12px;font-weight:bold;white-space:nowrap}
-    .price-card h3{font-size:20px;margin-bottom:8px;color:#243447}
-    .price-amount{font-size:38px;font-weight:bold;color:#2563eb;margin:12px 0 4px}
-    .price-amount span{font-size:16px;font-weight:normal;color:#697586}
-    .price-note{font-size:12px;color:#697586;margin-bottom:20px}
-    .price-features{list-style:none;text-align:left;margin-bottom:24px}
-    .price-features li{padding:6px 0;font-size:14px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;align-items:flex-start}
-    .price-features li:last-child{border:none}
-    .check{color:#16a34a;font-weight:bold;flex-shrink:0}
-    .cross{color:#94a3b8;flex-shrink:0}
-    .price-cta{width:100%;padding:12px;font-size:15px;border-radius:7px;display:block;text-align:center}
-    .no-sub{font-size:12px;color:#697586;margin-top:10px}
-    .faq{background:#f6f7f9}
-    .faq-list{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-    details{background:white;border:1px solid #e1e5ea;border-radius:8px;padding:18px 20px}
-    summary{font-weight:bold;font-size:15px;cursor:pointer;color:#243447;list-style:none;display:flex;justify-content:space-between;align-items:center}
-    summary::after{content:"＋";font-size:18px;color:#2563eb;flex-shrink:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(31,79,255,.10), transparent 30%),radial-gradient(circle at top right, rgba(20,184,255,.11), transparent 28%),linear-gradient(180deg,#f8fbff 0%,#f4f7fb 100%);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max);margin:0 auto;padding:0 22px}
+    .topbar{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:rgba(248,251,255,.82);border-bottom:1px solid rgba(220,229,239,.7)}
+    .topbar-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.02em;font-size:1.05rem}
+    .brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 10px 24px rgba(31,79,255,.25);display:grid;place-items:center;color:#fff;font-size:1.05rem}
+    .nav{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:flex-end;font-size:.96rem;color:#2d3b4f}
+    .nav a{color:#304055;opacity:.9}
+    .nav a:hover{opacity:1}
+    .nav-cta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 18px;border-radius:14px;border:1px solid transparent;font-weight:700;transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease,background .15s ease;cursor:pointer;white-space:nowrap}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;box-shadow:0 14px 28px rgba(31,79,255,.22)}
+    .btn-ghost{background:#fff;border-color:var(--border);color:#203047;box-shadow:var(--shadow-soft)}
+    .btn-dark{background:#14253c;color:#fff}
+    .hero{padding:64px 0 28px}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:stretch}
+    .hero-copy{padding:34px 0 0}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(31,79,255,.08);color:#2446cb;font-size:.86rem;font-weight:700;margin-bottom:18px}
+    h1{font-size:clamp(2.25rem,4.5vw,4.1rem);line-height:1.08;letter-spacing:-.05em;margin-bottom:18px;max-width:14ch}
+    .lead{font-size:clamp(1.02rem,1.55vw,1.18rem);color:var(--muted);max-width:60ch;margin-bottom:28px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .trust-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;color:#3b4d64;font-size:.94rem}
+    .trust-pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.65);border:1px solid rgba(220,229,239,.9)}
+    .hero-card{align-self:stretch;background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.86));border:1px solid rgba(220,229,239,.92);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .hero-card::before{content:"";position:absolute;inset:auto -80px -80px auto;width:220px;height:220px;background:radial-gradient(circle, rgba(31,79,255,.16), transparent 68%);pointer-events:none}
+    .mock-window{border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;background:#fff;box-shadow: inset 0 1px 0 rgba(255,255,255,.7)}
+    .mock-head{display:flex;align-items:center;gap:8px;padding:12px 14px;background:linear-gradient(180deg,#f8fbff,#edf4ff);border-bottom:1px solid #e2e8f0}
+    .dot{width:10px;height:10px;border-radius:50%;background:#cbd5e1}
+    .mock-body{padding:16px}
+    .mock-title{font-size:1rem;font-weight:800;margin-bottom:8px}
+    .mock-search{display:flex;gap:8px;margin:12px 0 14px}
+    .mock-search span{flex:1;padding:11px 12px;border:1px solid #d7e1ee;border-radius:12px;color:#6b7a8f;background:#fbfdff;font-size:.94rem}
+    .mock-card{border:1px solid #e6edf6;border-radius:16px;padding:14px;margin-bottom:12px;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .mock-card strong{display:block;margin-bottom:6px}
+    .mock-meta{display:flex;gap:10px;flex-wrap:wrap;color:#61728a;font-size:.88rem}
+    .mock-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#edf5ff;color:#2146c7;font-size:.82rem;font-weight:700;margin-bottom:10px}
+    .section{padding:38px 0 10px}
+    .section h2{font-size:clamp(1.55rem,2.5vw,2.2rem);letter-spacing:-.03em;margin-bottom:14px}
+    .section p.section-lead{color:var(--muted);max-width:70ch;margin-bottom:22px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:rgba(255,255,255,.9);border:1px solid rgba(220,229,239,.95);border-radius:var(--radius-sm);padding:22px;box-shadow:var(--shadow-soft)}
+    .card .icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg, rgba(31,79,255,.10), rgba(20,184,255,.12));display:grid;place-items:center;font-size:1.2rem;margin-bottom:14px}
+    .card h3{font-size:1.08rem;margin-bottom:8px}
+    .card p{color:var(--muted);font-size:.96rem}
+    .proof{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .proof-box{background:linear-gradient(180deg,#fff,#fafdff);border:1px solid rgba(220,229,239,.95);border-radius:20px;padding:22px;box-shadow:var(--shadow-soft)}
+    .proof-title{display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:10px}
+    .proof-box ul{list-style:none;display:grid;gap:10px;color:#374151;font-size:.96rem}
+    .proof-box li::before{content:"✓";color:var(--ok);font-weight:900;margin-right:8px}
+    .pricing{padding-top:44px}
+    .pricing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;align-items:stretch}
+    .price-card{background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(251,253,255,.95));border:1px solid rgba(220,229,239,.95);border-radius:24px;padding:28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .price-card.featured{border:1px solid rgba(31,79,255,.24);box-shadow:0 20px 56px rgba(31,79,255,.15);transform:translateY(-4px)}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:.82rem;font-weight:800;margin-bottom:14px}
+    .badge-free{background:#fff7ed;color:#92400e}
+    .badge-pro{background:#eaf1ff;color:#2146c7}
+    .price{font-size:3rem;line-height:1;letter-spacing:-.05em;margin:10px 0 8px;font-weight:900}
+    .price small{font-size:1rem;color:var(--muted);font-weight:600}
+    .subline{color:var(--muted);margin-bottom:18px;font-size:.96rem}
+    .feat-list{list-style:none;display:grid;gap:10px;margin:18px 0 22px}
+    .feat-list li{display:flex;gap:10px;align-items:flex-start;color:#344054;font-size:.96rem}
+    .feat-list .yes{color:var(--ok);font-weight:900;flex:0 0 auto}
+    .feat-list .no{color:#94a3b8;font-weight:900;flex:0 0 auto}
+    .fine{color:var(--muted);font-size:.88rem;margin-top:10px}
+    .comparison{margin-top:18px;background:rgba(255,255,255,.88);border:1px solid rgba(220,229,239,.95);border-radius:24px;overflow:hidden;box-shadow:var(--shadow-soft)}
+    .comparison table{width:100%;border-collapse:collapse}
+    .comparison th,.comparison td{padding:14px 16px;border-bottom:1px solid #ecf2f8;text-align:left;vertical-align:top;font-size:.95rem}
+    .comparison th{background:#f6f9ff;color:#1f2d42;font-size:.92rem}
+    .comparison tr:last-child td{border-bottom:none}
+    .faq{padding-top:44px}
+    .faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    details{background:#fff;border:1px solid rgba(220,229,239,.95);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-soft)}
+    summary{cursor:pointer;font-weight:800;list-style:none;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    summary::after{content:"+";color:var(--brand);font-size:1.2rem;line-height:1}
     details[open] summary::after{content:"−"}
-    details p{margin-top:12px;font-size:14px;color:#697586;line-height:1.6}
-    .cta-bottom{background:linear-gradient(135deg,#243447,#1e3a5f);color:white;text-align:center}
-    .cta-bottom h2{color:white}
-    .cta-bottom p{opacity:.85;margin-bottom:28px;font-size:16px}
-    .cta-bottom-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-    footer{background:#1a2535;color:#94a3b8;text-align:center;padding:24px;font-size:13px}
-    footer a{color:#94a3b8}
-    .ad-slot{background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:10px;text-align:center;font-size:12px;color:#9a3412;margin:32px auto;max-width:728px}
+    details p{color:var(--muted);margin-top:10px;font-size:.96rem}
+    .final-cta{padding:54px 0 70px}
+    .cta-box{background:linear-gradient(135deg,#0f1f36 0%,#18324f 55%,#1f4fff 120%);color:#fff;border-radius:30px;padding:34px;box-shadow:0 22px 70px rgba(15,31,54,.24);position:relative;overflow:hidden}
+    .cta-box::after{content:"";position:absolute;inset:auto -120px -120px auto;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle, rgba(20,184,255,.22), transparent 64%);pointer-events:none}
+    .cta-box h2{color:#fff;margin-bottom:10px}
+    .cta-box p{color:rgba(255,255,255,.82);max-width:62ch}
+    .cta-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+    footer{padding:20px 0 34px;color:var(--muted);font-size:.92rem;border-top:1px solid rgba(220,229,239,.8);background:rgba(248,251,255,.45)}
+    footer .footer-inner{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+    @media (max-width:900px){.hero-grid,.grid-3,.proof,.pricing-grid,.faq-grid{grid-template-columns:1fr}h1{max-width:100%}.hero-card{order:-1}.topbar-inner{padding:14px 0;align-items:flex-start;flex-direction:column}.nav{justify-content:flex-start}.cta-box{padding:26px}}
+    @media (max-width:640px){.container{padding:0 16px}.hero{padding-top:30px}.hero-copy{padding-top:10px}.btn{width:100%}.nav-cta{width:100%}.nav-cta .btn{width:100%}.comparison th,.comparison td{padding:12px 12px}.price{font-size:2.5rem}}
   </style>
 </head>
 <body>
-
-<nav>
-  <span class="nav-logo">📘 BPUSearch</span>
-  <div class="nav-links">
-    <a href="#pricing" style="color:rgba(255,255,255,.8);font-size:14px">Tarifs</a>
-    <a href="#faq" style="color:rgba(255,255,255,.8);font-size:14px">FAQ</a>
-    <a href="https://bpusearch.gumroad.com" target="_blank" class="btn btn-green">Acheter Pro — 13 $</a>
-  </div>
-</nav>
-
-<div class="hero">
-  <div class="badge-local">🔒 100 % local — Aucune donnée envoyée sur Internet</div>
-  <h1>Retrouvez n'importe quel prix unitaire dans vos bordereaux Excel — en quelques secondes.</h1>
-  <p>BPUSearch indexe tous vos fichiers Excel BTP en local et vous affiche immédiatement la source, la moyenne et la comparaison des prix. Vos données restent sur votre machine. Aucun cloud. Aucune fuite.</p>
-  <div class="hero-btns">
-    <a href="https://bpusearch.gumroad.com" class="btn btn-outline" target="_blank">Télécharger gratuitement</a>
-    <a href="https://bpusearch.gumroad.com" class="btn btn-green" target="_blank">Acheter la version Pro — 13 $</a>
-  </div>
-</div>
-
-<div class="ad-slot">
-  📢 Espace publicitaire — Google AdSense (à activer après approbation)
-</div>
-
-<section class="benefits">
-  <div class="container">
-    <h2>Pourquoi BPUSearch ?</h2>
-    <div class="benefits-grid">
-      <div class="benefit-card">
-        <div class="benefit-icon">⚡</div>
-        <h3>Gagnez du temps sur vos recherches de prix</h3>
-        <p>Tapez une désignation — béton B25, terrassement, conduite PVC — et BPUSearch cherche dans tous vos bordereaux en même temps. Fini les heures perdues à ouvrir 20 fichiers.</p>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">📘</div>
+        <div>
+          <div>BPUSearch</div>
+          <div style="font-size:.82rem;color:#607084;font-weight:600">Recherche de prix unitaires BTP en local</div>
+        </div>
       </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">📊</div>
-        <h3>Comparez les prix instantanément</h3>
-        <p>Chaque résultat affiche le fichier source, l'unité, le prix unitaire et la moyenne calculée. Un graphe comparatif vous aide à voir l'écart d'un seul coup d'œil.</p>
-      </div>
-      <div class="benefit-card">
-        <div class="benefit-icon">🔒</div>
-        <h3>Gardez vos données confidentielles</h3>
-        <p>BPUSearch fonctionne entièrement en local. Vos BPU, vos prix négociés et vos fichiers sensibles ne quittent jamais votre ordinateur. Aucun cloud. Aucun risque.</p>
-      </div>
+      <nav class="nav">
+        <a href="#benefices">Bénéfices</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#faq">FAQ</a>
+        <div class="nav-cta">
+          <a href="https://bpusearch.gumroad.com/l/oqhqjy" target="_blank" class="btn btn-ghost">Téléchargement gratuit</a>
+          <a href="https://bpusearch.gumroad.com/l/bpusearch_pro" target="_blank" class="btn btn-primary">Acheter Pro — 19 $</a>
+        </div>
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
 
-<div class="ad-slot">📢 Espace publicitaire — Google AdSense</div>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">🔒 100 % local · Aucun fichier Excel envoyé dans le cloud</div>
+          <h1>Vous avez plusieurs fichiers Excel de formats différents.</h1>
+          <p class="lead">BPUSearch vous donne une seule interface pour retrouver, filtrer, trier et comparer toutes vos désignations utiles : moyenne dynamique, graphe comparatif, sélection/désélection, filtre par dossier et export Pro.</p>
+          <div class="hero-actions">
+            <a href="https://bpusearch.gumroad.com/l/oqhqjy" target="_blank" class="btn btn-ghost">Télécharger la version gratuite</a>
+            <a href="https://bpusearch.gumroad.com/l/bpusearch_pro" target="_blank" class="btn btn-primary">Passer Pro — 19 $</a>
+          </div>
+          <div class="trust-row">
+            <span class="trust-pill">Tri et filtres</span>
+            <span class="trust-pill">Moyenne dynamique</span>
+            <span class="trust-pill">Graphe comparatif</span>
+            <span class="trust-pill">Achat unique</span>
+          </div>
+        </div>
 
-<section id="pricing">
-  <div class="container">
-    <h2>Ce que vous obtenez</h2>
-    <div class="pricing-grid">
-      <div class="price-card">
-        <h3>Version gratuite</h3>
-        <div class="price-amount">0 <span>$</span></div>
-        <div class="price-note">Pour toujours</div>
-        <ul class="price-features">
-          <li><span class="check">✓</span> Fichiers Excel illimités</li>
-          <li><span class="check">✓</span> 3 recherches par jour</li>
-          <li><span class="check">✓</span> Résultats avec source, prix et moyenne</li>
-          <li><span class="check">✓</span> Graphe comparatif</li>
-          <li><span class="cross">✗</span> Export Excel des résultats</li>
-          <li><span class="cross">✗</span> Rapport diagnostic complet</li>
-          <li><span class="cross">✗</span> Sans publicité</li>
-          <li><span class="cross">✗</span> Mises à jour incluses</li>
-        </ul>
-        <a href="https://bpusearch.gumroad.com" target="_blank" class="btn price-cta" style="border:2px solid #243447;color:#243447;background:white">Télécharger gratuitement</a>
+        <div class="hero-card" aria-label="Aperçu produit">
+          <div class="mock-window">
+            <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <div class="mock-body">
+              <div class="mock-tag">Aperçu de l’interface</div>
+              <div class="mock-title">Recherche locale sur plusieurs classeurs</div>
+              <div class="mock-search"><span>Ex. : béton B25, PVC, terrassement…</span></div>
+              <div class="mock-card">
+                <strong>Résultats pertinents</strong>
+                <div class="mock-meta"><span>Filtre</span><span>Tri</span><span>Répertoire</span></div>
+              </div>
+              <div class="mock-card">
+                <strong>Analyse instantanée</strong>
+                <div class="mock-meta"><span>Moyenne</span><span>Graphe</span><span>Export Pro</span></div>
+              </div>
+            </div>
+          </div>
+          <p style="margin-top:16px;color:var(--muted);font-size:.95rem">Pensé pour les chefs de projet, métreurs, économistes de la construction et acheteurs BTP.</p>
+        </div>
       </div>
-      <div class="price-card featured">
-        <div class="featured-badge">⭐ Recommandé</div>
-        <h3>Version Pro</h3>
-        <div class="price-amount">13 <span>$</span></div>
-        <div class="price-note">Achat unique — aucun abonnement</div>
-        <ul class="price-features">
-          <li><span class="check">✓</span> Fichiers Excel illimités</li>
-          <li><span class="check">✓</span> Recherches illimitées</li>
-          <li><span class="check">✓</span> Résultats avec source, prix et moyenne</li>
-          <li><span class="check">✓</span> Graphe comparatif</li>
-          <li><span class="check">✓</span> Export Excel des résultats</li>
-          <li><span class="check">✓</span> Rapport diagnostic complet</li>
-          <li><span class="check">✓</span> Sans publicité</li>
-          <li><span class="check">✓</span> Mises à jour incluses</li>
-          <li><span class="check">✓</span> Support email prioritaire</li>
-        </ul>
-        <a href="https://bpusearch.gumroad.com" target="_blank" class="btn btn-primary price-cta">Acheter — 13 $</a>
-        <div class="no-sub">Aucun abonnement. Aucun renouvellement.</div>
+    </section>
+
+    <section class="section" id="benefices">
+      <div class="container">
+        <h2>Ce que BPUSearch résout</h2>
+        <p class="section-lead">Quand vos désignations sont dispersées dans plusieurs fichiers, avec des formats différents et des classements par dossier, la recherche manuelle devient lente, fragile et source d’erreurs. BPUSearch centralise tout dans une seule interface.</p>
+
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3>Recherche multi-fichiers immédiate</h3>
+            <p>Une seule requête suffit pour interroger plusieurs bordereaux Excel et retrouver les désignations utiles sans ouvrir chaque classeur un par un.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧭</div>
+            <h3>Isolation des bons résultats</h3>
+            <p>Filtrez, triez, sélectionnez ou désélectionnez les désignations qui contiennent un mot-clé sans que ce mot-clé soit forcément votre véritable cible.</p>
+          </article>
+          <article class="card">
+            <div class="icon">📊</div>
+            <h3>Analyse dynamique des prix</h3>
+            <p>La moyenne se recalcule selon les lignes visibles, le graphe s’adapte aux filtres, et l’export Pro garde un rendu clair et exploitable.</p>
+          </article>
+        </div>
+
+        <div class="proof">
+          <div class="proof-box">
+            <div class="proof-title">✅ Ce que vous voyez dans l’outil</div>
+            <ul>
+              <li>Les désignations pertinentes en un seul tableau</li>
+              <li>Le tri par dossier si vos fichiers sont classés par projet ou par année</li>
+              <li>La moyenne et le graphe mis à jour en fonction de vos filtres</li>
+            </ul>
+          </div>
+          <div class="proof-box">
+            <div class="proof-title">✅ Ce que vous gagnez</div>
+            <ul>
+              <li>Moins d’allers-retours dans les classeurs Excel</li>
+              <li>Moins d’erreurs lors des comparaisons</li>
+              <li>Une lecture rapide de la source et de l’écart de prix</li>
+            </ul>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <section class="section pricing" id="pricing">
+      <div class="container">
+        <h2>Tarifs simples et lisibles</h2>
+        <p class="section-lead">Une version gratuite pour découvrir l’outil, une version Pro pour travailler sans limite.</p>
+
+        <div class="pricing-grid">
+          <article class="price-card">
+            <div class="badge badge-free">Version gratuite</div>
+            <h3>Tester BPUSearch</h3>
+            <div class="price">0 <small>$</small></div>
+            <div class="subline">Démarrer vite, avec une vraie expérience produit.</div>
+            <ul class="feat-list">
+              <li><span class="yes">✓</span> Recherche et consultation locales</li>
+              <li><span class="yes">✓</span> Résultats visibles avec source et moyenne</li>
+              <li><span class="yes">✓</span> Limites d’usage pour l’essai</li>
+              <li><span class="yes">✓</span> Publicité visible dans l’interface</li>
+              <li><span class="no">✕</span> Export Excel complet</li>
+              <li><span class="no">✕</span> Travail hors ligne complet</li>
+            </ul>
+            <a href="https://bpusearch.gumroad.com/l/oqhqjy" target="_blank" class="btn btn-ghost" style="width:100%;">Télécharger gratuitement</a>
+          </article>
+
+          <article class="price-card featured">
+            <div class="badge badge-pro">Version Pro</div>
+            <h3>Achat unique</h3>
+            <div class="price">19 <small>$</small></div>
+            <div class="subline">Pour les équipes et les usages réguliers.</div>
+            <ul class="feat-list">
+              <li><span class="yes">✓</span> Recherches illimitées</li>
+              <li><span class="yes">✓</span> Export Excel des résultats</li>
+              <li><span class="yes">✓</span> Rapport diagnostic complet</li>
+              <li><span class="yes">✓</span> Sans publicité</li>
+              <li><span class="yes">✓</span> Travail hors ligne complet</li>
+              <li><span class="yes">✓</span> Support prioritaire</li>
+            </ul>
+            <a href="https://bpusearch.gumroad.com/l/bpusearch_pro" target="_blank" class="btn btn-primary" style="width:100%;">Acheter la version Pro</a>
+            <div class="fine">Achat unique. Aucun abonnement.</div>
+          </article>
+        </div>
+
+        <div class="comparison">
+          <table>
+            <thead>
+              <tr><th>Fonction</th><th>Free</th><th>Pro</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Accès initial</td><td>Email + magic link</td><td>Activation directe</td></tr>
+              <tr><td>Connexion Internet</td><td>Obligatoire au démarrage et au refresh de session</td><td>Non nécessaire après activation</td></tr>
+              <tr><td>Recherches</td><td>3 par jour</td><td>Illimitées</td></tr>
+              <tr><td>Publicité</td><td>Visible dans la page publique et dans l’interface</td><td>Supprimée</td></tr>
+              <tr><td>Splash reminder</td><td>Affiché après la 2e recherche</td><td>Absent</td></tr>
+              <tr><td>Export</td><td>Non</td><td>Oui</td></tr>
+              <tr><td>Rapport diagnostic</td><td>Non</td><td>Oui, complet</td></tr>
+              <tr><td>Confidentialité</td><td>Données locales, mais interface dépend du web</td><td>100 % local</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="container">
+        <h2>Questions fréquentes</h2>
+        <div class="faq-grid">
+          <details>
+            <summary>Mes fichiers Excel quittent-ils mon ordinateur ?</summary>
+            <p>Non. L’outil fonctionne en local et vos fichiers restent sur votre machine. BPUSearch ne les envoie pas dans le cloud.</p>
+          </details>
+          <details>
+            <summary>La version gratuite est-elle suffisante pour tester ?</summary>
+            <p>Oui. Elle permet de découvrir l’outil, la recherche et la comparaison. La version Pro supprime les limites et la publicité.</p>
+          </details>
+          <details>
+            <summary>Le logiciel fonctionne-t-il sans connexion Internet ?</summary>
+            <p>La version Pro est pensée pour travailler hors ligne. La version gratuite conserve une dépendance web pour l’authentification et l’usage lié au compte.</p>
+          </details>
+          <details>
+            <summary>Que fait la version Pro de plus ?</summary>
+            <p>Elle enlève les limites, supprime la publicité, ajoute l’export Excel et permet un usage complet plus confortable.</p>
+          </details>
+          <details>
+            <summary>À qui s’adresse BPUSearch ?</summary>
+            <p>Aux professionnels du BTP qui doivent retrouver rapidement des prix unitaires dans des bordereaux Excel dispersés.</p>
+          </details>
+          <details>
+            <summary>Comment obtenir la version Pro ?</summary>
+            <p>Le lien d’achat mène vers Gumroad. Une fois l’achat terminé, vous recevez votre accès Pro selon le flux d’activation prévu.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Commencez gratuitement, passez Pro quand vous êtes prêt.</h2>
+          <p>BPUSearch a été conçu pour accélérer la recherche de prix unitaires, garder vos données locales et simplifier les comparaisons dans vos fichiers Excel BTP.</p>
+          <div class="cta-actions">
+            <a href="https://bpusearch.gumroad.com/l/oqhqjy" target="_blank" class="btn btn-ghost">Télécharger la version gratuite</a>
+            <a href="https://bpusearch.gumroad.com/l/bpusearch_pro" target="_blank" class="btn btn-dark">Acheter Pro — 19 $</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>BPUSearch — Aucune donnée Excel envoyée sur Internet</div>
+      <div>Contact : <a href="mailto:bpusearch.app@gmail.com">bpusearch.app@gmail.com</a></div>
     </div>
-  </div>
-</section>
-
-<section class="faq" id="faq">
-  <div class="container">
-    <h2>Questions fréquentes</h2>
-    <div class="faq-list">
-      <details>
-        <summary>Est-ce que mes fichiers Excel sont envoyés sur internet ?</summary>
-        <p>Non. BPUSearch fonctionne entièrement sur votre machine. Vos fichiers restent locaux, aucune donnée n'est envoyée sur un serveur.</p>
-      </details>
-      <details>
-        <summary>Quels formats Excel sont supportés ?</summary>
-        <p>Les fichiers .xlsx et .xls, quelle que soit la structure. BPUSearch détecte automatiquement les colonnes de désignation, unité et prix unitaire.</p>
-      </details>
-      <details>
-        <summary>Est-ce que ça marche sans connexion internet ?</summary>
-        <p>Oui. L'indexation et la recherche fonctionnent 100 % hors ligne. Seule la vérification de licence nécessite une connexion au démarrage, avec un cache offline de 72 heures.</p>
-      </details>
-      <details>
-        <summary>Comment activer la version Pro après achat ?</summary>
-        <p>Après l'achat sur Gumroad, envoyez votre Machine ID (affiché dans l'application) à bpusearch.app@gmail.com. Vous recevez votre activation par email sous 24h.</p>
-      </details>
-      <details>
-        <summary>Que se passe-t-il si je change de PC ?</summary>
-        <p>La licence est liée à votre machine. En cas de changement d'ordinateur, la réactivation est gratuite sur simple demande à bpusearch.app@gmail.com.</p>
-      </details>
-      <details>
-        <summary>La version gratuite est-elle limitée dans le temps ?</summary>
-        <p>Non. Elle reste gratuite pour toujours — fichiers illimités et 3 recherches par jour.</p>
-      </details>
-      <details>
-        <summary>BPUSearch fonctionne-t-il sur Mac et Windows ?</summary>
-        <p>Oui. Compatible Windows 10/11 et macOS. Une installation Python est requise (guide inclus).</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<section class="cta-bottom">
-  <div class="container">
-    <h2>Prêt à gagner du temps sur vos recherches de prix ?</h2>
-    <p>Commencez gratuitement. Passez Pro quand vous en avez besoin.</p>
-    <div class="cta-bottom-btns">
-      <a href="https://bpusearch.gumroad.com" class="btn btn-outline" target="_blank">Télécharger gratuitement</a>
-      <a href="https://bpusearch.gumroad.com" class="btn btn-green" target="_blank">Acheter la version Pro — 13 $</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <p>📘 BPUSearch — Données 100 % locales · Aucune donnée envoyée sur Internet</p>
-  <p style="margin-top:6px">Contact : <a href="mailto:bpusearch.app@gmail.com">bpusearch.app@gmail.com</a></p>
-</footer>
-
+  </footer>
 </body>
 </html>
